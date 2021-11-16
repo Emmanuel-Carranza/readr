@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Oral_readr</title>
+    <title>oral_emslo.knit</title>
     <meta charset="utf-8" />
     <script src="libs/header-attrs-2.11/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
@@ -10,11 +10,6 @@
   </head>
   <body>
     <textarea id="source">
-class: center, middle, inverse, title-slide
-
-# Oral_readr
-
----
 
 
 class: center
@@ -39,26 +34,31 @@ library(haven)
 
 ---
 
-background-position: right, top
+background-position: 800px 50px
 background-image: url("images/all_logo.png")
 background-size: 400px
 
 #Importation des données
 ###Readr: 
-Formats texte : .csv/cvs2, tsv, fwf, .txt, .log
+Format texte : .csv/cvs2, tsv, fwf, .txt, .log
 --
+
 ###Haven:
-format sas(sas7bcat), SPSS(.sav, .zsav, .por) Stata(.dta)
+Format sas(sas7bcat), SPSS(.sav, .zsav, .por) Stata(.dta)
 --
+
 ###Readxl: 
-format excel (.xls, .xlsx)
+Format excel (.xls, .xlsx)
+
 --
-En plus de lire et d'importer plusieurs type de fichiers localement, ces trois packages peuvent aussi lire des fichiers en ligne à partir d'un lien URL. Les fichier compréssés sont aussi accepté.
+
+En plus de lire et d'importer plusieurs type de fichiers localement, ces trois packages peuvent aussi lire des fichiers en ligne à partir d'un lien URL ansi que les fichiers compréssés.
 ---
 
 background-image: url(images//readr_logo.png)
 background-position: 1050px 50px
 background-size: 80px
+
 
 ##Readr (under the hood)
 
@@ -74,12 +74,8 @@ Lors de l'importation d'un fichier, trois choses distinctes se produisent :
 
 **Vector parsers**: Assignation du type de classe des observations.
 
---
+![](images/under_the_hood.png)
 
-##UNDER THE HOOD METAPHORE AVEC PHOTO ET CHAR
-Bien que ces étapes se font automatiquement et de façons non visibles, nous avons aussi l'option de modifier manuellement le type de classe des colonnes, leurs noms, combien de valeurs seront affichées et bien plus.
---
-Il est important de savoir que ceux-ci peuvent toujours être modifiés après l'importation. Mais le but ici est d'importer les données sous leurs bons formats dès le début.
 
 
 ---
@@ -125,7 +121,7 @@ background-size: 80px
 
 **read_csv2()** observations délimitées par des ;
 
-**read_tsv()** valeurs délimite par des tab ou /t
+**read_tsv()** valeurs délimite par des tab
 
 **read_fwf()** observations délimitées par la taille en caractère que peut avoir les observations de la même variable
 
@@ -143,7 +139,7 @@ background-size: 80px
 
 #read.csv vs read_csv
 
-Read.csv() est la fonction de base R qui permet de lire un fichier csv aussi, mais sans faire appel a un package.
+Read.csv() est la fonction de base R qui permet de lire un fichier csv aussi mais sans Tidyverse.
 
 
 ##Base R
@@ -159,7 +155,48 @@ readr_csv &lt;- read_csv("datasets/penguins_lter.csv",show_col_types = FALSE)
 ```
 
 
-La différence est que read_csv accomplit la tâche environ 10 fois plus vite. La différence est presque négligeable avec des petits fichiers, mais est très significative lors d'importation de plus gros fichiers.
+La différence est que read_csv accomplit la tâche environ 10 fois plus vite. C'est presque négligeable avec des petits fichiers, mais  très significatif lors d'importation de plus gros fichiers.
+
+---
+background-image: url(images/readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+#Web log file
+
+En informatique, un web log file est un fichier qui enregistre soit des événements qui se produisent dans un système d'exploitation ou d'autres exécutions de logiciels, soit des messages entre différents utilisateurs d'un logiciel de communication.
+
+
+![](images/Samp_ClientSideLogFile3.gif)
+
+---
+background-image: url(images/readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+##Argument important similaire (csv,csv2,tsv,delim)
+
+![](images/argument_mix.png)
+---
+background-image: url(images/readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+##Argument important similaire (csv,csv2,tsv,delim)
+
+**col_names** = True si le nom des colonnes est déja pris en compte dans la première ranger. Sinon on peut ajouter l'argument pour leur donner un nom.
+  
+**col_types** = Null vs modifier manuellement le type
+  
+**col_select** = Null vs sélection des colonnes à importer
+  
+**skip** = 0 est-ce qu’on skip certain ranger, cela inclut la première qui contient le nom des colonnes et donc si on skip celle-ci on doit les renommer après.
+  
+**locale** : utile pour utiliser un encodage universel de caractère (encoding = UTF-8)
+  
+**n_max** = Inf par défaut(combien de ligne est-ce qu’on importe)
+  
+**guess_max** : combien de ligne sont utilisé pour déterminer le type de classe des valeurs de la colonne
 
 ---
 background-image: url(images/readr_logo.png)
@@ -177,7 +214,7 @@ penguing &lt;- read_csv("datasets/penguins_lter.csv",col_select = list( "Sex","I
 ```
 
 ```
-## ── Column specification ───────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────────
 ## Delimiter: ","
 ## chr (3): Species, Island, Sex
 ```
@@ -209,53 +246,14 @@ background-image: url(images/readr_logo.png)
 background-position: 1050px 50px
 background-size: 80px
 
-#Web log file
-
-En informatique, un web log file est un fichier qui enregistre soit des événements qui se produisent dans un système d'exploitation ou d'autres exécutions de logiciels, soit des messages entre différents utilisateurs d'un logiciel de communication.
-
-
-![](images/Samp_ClientSideLogFile3.gif)
-
----
-background-image: url(images/readr_logo.png)
-background-position: 1050px 50px
-background-size: 80px
-
-##Argument important similaire (csv,csv2,tsv,delim)
-
-![](images/argument_mix.png)
----
-background-image: url(images/readr_logo.png)
-background-position: 1050px 50px
-background-size: 80px
-
-##Argument important similaire (csv,csv2,tsv,delim)
-
-**col_names** = si le non des colonnes est deja pris en compte dans la première ranger. Sinon on peut ajouter l'argument pour leur donner un nom.
-  
-**col_types** = modifier manuellement le type
-  
-**col_select** = sélection des colonnes à importer
-  
-**skip** = est-ce qu’on skip certain ranger, cela inclut la première qui contient le nom des colonnes et donc si on skip celle-ci on doit les renommer après.
-  
-**locale** = utile pour utiliser un encodage universel de caractère (encoding = UTF-8)
-  
-**n_max** = combien de ligne est-ce qu’on importe
-  
-**guess_max** = combien de ligne est utilisée pour déterminer le type de classe des valeurs de la colonne
-
----
-background-image: url(images/readr_logo.png)
-background-position: 1050px 50px
-background-size: 80px
-
 #read_fwf
 .pull-left[
 Les fixed width files (.txt) sont un peu différent dans le sens que chaque valeur d'une colonne est située à la même place verticalement.
 
 
-L'attribut de ce type de fichier est qu'il n'y a pas de caractère utiliser pour délimiter les données ce qui rend sont analyse plus rapide si le fichier est très gros. Aussi le fichier serait plus léger en terme de taille puisqu'il y a énormément de caractère qui ne sy trouve pas.
+L'attribut de ce type de fichier est qu'il n'y a pas de caractère utilisé pour délimiter les données ce qui rend son analyse plus rapide si le fichier est très gros. 
+
+Le fichier serait plus léger en terme de taille puisqu'il y a énormément de caractère qui ne s'y trouve pas.
 
 ]
 .pull-right[
@@ -267,14 +265,15 @@ background-image: url(images//readr_logo.png)
 background-position: 1050px 50px
 background-size: 80px
 
-#Example 1
+# FWF Example 1
 taille et nom des colonnes
 
 
 ```r
 fwf_1 &lt;- read_fwf("datasets/penguins_fwf.txt",
          fwf_widths(widths = c(9, 9, 4, 4, 3, 4, 6, 4),
-                    col_names = c("species", "island", 
+                    col_names = c("species",
+                                  "island", 
                                   "bill_length_mm", 
                                   "bill_depth_mm",
                                   "flipper_length_mm", 
@@ -288,10 +287,10 @@ fwf_1 &lt;- read_fwf("datasets/penguins_fwf.txt",
 ```
 
 ```
-## ── Column specification ───────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────────
 ## 
 ## chr (3): species, island, sex
-## dbl (5): bill_length_mm, bill_depth_mm, flipper_length_mm, body_mas...
+## dbl (5): bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g...
 ```
 
 ```
@@ -304,8 +303,8 @@ fwf_1 &lt;- read_fwf("datasets/penguins_fwf.txt",
 background-image: url(images//readr_logo.png)
 background-position: 1050px 50px
 background-size: 80px
-#Exemple 2
-Positions de départ et de fin des colonnes ainsi que leur nom.
+#FWF Exemple 2
+Position de départ et de fin des colonnes ainsi que leur nom.
                       
 
 ```r
@@ -327,10 +326,10 @@ fwf_2 &lt;- read_fwf("datasets/penguins_fwf.txt",
 ```
 
 ```
-## ── Column specification ───────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────────
 ## 
 ## chr (3): species, island, sex
-## dbl (5): bill_length_mm, bill_depth_mm, flipper_length_mm, body_mas...
+## dbl (5): bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g...
 ```
 
 ```
@@ -343,7 +342,7 @@ fwf_2 &lt;- read_fwf("datasets/penguins_fwf.txt",
 background-image: url(images//readr_logo.png)
 background-position: 1050px 50px
 background-size: 80px
-#Exemple 3
+# FWF Exemple 3
 Ici le nom des colonnes est spécifié sur la même ligne que leur taille.
 
 ```r
@@ -363,10 +362,10 @@ fwf_3&lt;- read_fwf("datasets/penguins_fwf.txt",
 ```
 
 ```
-## ── Column specification ───────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────────
 ## 
 ## chr (3): species, island, sex
-## dbl (5): bill_length_mm, bill_depth_mm, flipper_length_mm, body_mas...
+## dbl (5): bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g...
 ```
 
 ```
@@ -380,8 +379,8 @@ background-image: url(images//readr_logo.png)
 background-position: 1050px 50px
 background-size: 80px
 
-#Example 4 avec fwf_cols
-Presque la même chose, mais pas le début et la fin de la colonne, mais juste la taille.
+#FWF Example 4 
+Presque la même chose, mais juste la taille.
 
 
 ```r
@@ -402,10 +401,10 @@ fwf_4 &lt;- read_fwf("datasets/penguins_fwf.txt",
 ```
 
 ```
-## ── Column specification ───────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────────
 ## 
 ## chr (3): species, island, sex
-## dbl (5): bill_length_mm, bill_depth_mm, flipper_length_mm, body_mas...
+## dbl (5): bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g...
 ```
 
 ```
@@ -423,9 +422,8 @@ background-size: 80px
 
 #Modifier le type
 
-Dans le data set fwf_4 que je viens de créée, sexe est une variable character puisque juste constitue de lettres et year est considéré double avec ces chiffres.  
+Dans le data set fwf_4 que je viens de créée, sexe est une variable character puisque juste constitue de lettres et year est considéré double. 
 
-spec(fwf_4)
 
 ```r
 spec(fwf_4)
@@ -462,8 +460,9 @@ fwf_5 &lt;- read_fwf("datasets/penguins_fwf.txt",
                             flipper_length_mm = 3,
                             body_mass_g = 4,
                             sex = 6,
-                            year = 4),col_types = cols(sex = col_factor(),
-                                    year = col_integer()))
+                            year = 4),
+                     col_types = cols(sex = col_factor(),
+                                      year = col_integer()))
 
 spec(fwf_5)
 ```
@@ -515,6 +514,24 @@ Alors si on connait déjà le format c’est préférable d’utiliser celle qui
 
 ```r
 excel1 &lt;- read_xlsx("datasets/penguins.xlsx")
+
+head(excel1)
+```
+
+```
+## # A tibble: 6 × 17
+##   studyName `Sample Number` Species   Region Island  Stage `Individual ID`
+##   &lt;chr&gt;     &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;          
+## 1 PAL0708   1               Adelie P… Anvers Torger… Adul… N1A1           
+## 2 PAL0708   2               Adelie P… Anvers Torger… Adul… N1A2           
+## 3 PAL0708   3               Adelie P… Anvers Torger… Adul… N2A1           
+## 4 PAL0708   4               Adelie P… Anvers Torger… Adul… N2A2           
+## 5 PAL0708   5               Adelie P… Anvers Torger… Adul… N3A1           
+## 6 PAL0708   6               Adelie P… Anvers Torger… Adul… N3A2           
+## # … with 10 more variables: Clutch Completion &lt;chr&gt;, Date Egg &lt;chr&gt;,
+## #   Culmen Length (mm) &lt;chr&gt;, Culmen Depth (mm) &lt;chr&gt;,
+## #   Flipper Length (mm) &lt;chr&gt;, Body Mass (g) &lt;chr&gt;, Sex &lt;chr&gt;,
+## #   Delta 15 N (o/oo) &lt;chr&gt;, Delta 13 C (o/oo) &lt;chr&gt;, Comments &lt;chr&gt;
 ```
 
 
@@ -525,24 +542,24 @@ background-size: 80px
 
 #Arguments readxl
 
-**path**	: ou ce trouve le fichier xls/xlsx 
+**path**	: où se trouve le fichier xls/xlsx 
 
 **sheet**	: soit le nom de la page ou son numéro.Par défaut, c’est juste la première.
 
-**range**	: positions des cellules comme  "B3:D87"
+**range**	: positions des cellules comme  "B3:D87" où est placé l'information importante
 
-**col_names**	: = TRUE #première ranger vont être les noms, 
-        FALSE = tu va devoir les nommer 
+**col_names**	: = TRUE première ranger vont être les noms, 
+        FALSE = tu va devoir les nommer
         
-**col_types**	: par défaut c’est NULL et readxl va interpréter le type lui-même. Ici on a encore interger, double, factor
+**col_types**	: par défaut c’est NULL et readxl va interpréter le type lui-même.
 
-**na**	 : le caractère utiliser pour les donner manquantes, par défaut une case blanche est un NA dans excel
+**na**	 : le caractère utiliser pour les donner manquantes sur excel par défaut est une case blanche. Si un autre symbole est utilisé c'est important de le mentionner.
 
 **skip**	 :combien de ranger on doit skipper pour analyser le fichier
 
-**n_max**	: combien de ranger il faudra analyser en entierMaximum number of data rows to read. Ignorer si l'argument range est utiliser
+**n_max**	: combien de ranger il faudra importer. Ignorer si l'argument range() est utilisé
 
-**guess_max**	 :nombre maximum de ranger utiliser pour décider du type de classe des valeurs d'une colonne. Encore une fois il prend juste les 1000 premières.
+**guess_max**	 :nombre maximum de ranger utilisé pour décider du type de classe des valeurs d'une colonne. Encore une fois il prend juste les 1000 premières.
 
 ---
 background-image: url(images//readxl_logo.png)
@@ -550,9 +567,7 @@ background-position: 1050px 50px
 background-size: 80px
 #Column specification
 
-dans excel le type "character" est interchangeable pour "text",
-
-on peut aussi utiliser ces abreaviations à la place des mots entiers
+on peut aussi utiliser ces abréaviations à la place des mots entiers
 
 ![](images/excel_type.png)
 
@@ -562,9 +577,9 @@ background-position: 1050px 50px
 background-size: 80px
 #Haven
 
-Haven n'est pas activé avec Library(TidyVerse)
+Haven n'est pas activé avec Library(Tidyverse)
 
-On a pas de le choix de 
+On a pas de le choix de :
 
 
 ```r
@@ -585,30 +600,38 @@ background-size: 80px
 
 ##Labelled vectors
 
-SAS, SPSS, et Stata contienne un concept appeler “labelled vectors " C'est l'équivalent d’une description assigner a une ou plusieurs valeurs. C'est pour la compréhension de l'humain lisant les données et non pour la machine.
+SAS, SPSS, et Stata contienne un concept appeler “labelled vectors " C'est l'équivalent d’une description assigné a une ou plusieurs valeurs. C'est pour la compréhension de l'humain qui les données et non pour la machine.
 
-labelled()
-print labelled()
+**labelled()**
+
+
+**print labelled()**
 
 ##Tagged missing values
 Sas et stata comprennent les NA mais ils peuvent avoir plusieurs types de NA (avec différent niveau allant de A a Z)
 
-tagged_na() fournit un moyen pratique de représenter ces types de valeurs manquantes dans R en tirant parti de la représentation binaire de NA.
+**tagged_na()** fournit un moyen pratique de représenter ces types de valeurs manquantes dans R.
 
+---
 background-image: url(images//haven_logo.png)
 background-position: 1050px 50px
 background-size: 80px
 
 ##Remove attributes
-Il existe un certain nombre de fonctionnalités SPSS/SAS/Stata qui n'ont pas d'équivalent direct dans R. Haven les préserve afin que vous puissiez choisir ce que vous en faites. Pour les éliminer simplement, utilisez l'une des fonctions de zap.
 
-zap_empty() : Convertis les valeurs manquant en NA
+Il existe un certain nombre de fonctionnalités SPSS/SAS/Stata qui n'ont pas d'équivalent direct dans R.
 
-zap_formats() :Haven stocke les formats de variables dans un attribut: format.stata, format.spss ou format.sas. Si cela pose des problèmes pour votre code, vous pouvez vous en débarrasser avec zap_formats
+Haven les préserve afin que vous puissiez choisir ce que vous en faites.
 
-zap_label() :Supprime l'étiquette de variable, laissant les vecteurs non étiquetés tels quels. zap_labels() pour l'ensemble
+Pour les éliminer simplement, utilisez l'une des fonctions de zap.
 
-zap_widths() enlève l’attribut de la largeur des valeurs
+**zap_empty()** : Convertis les valeurs manquant en NA
+
+**zap_formats()** :Haven stocke les formats de variables dans un attribut: format.stata, format.spss ou format.sas. On peu s'en débarrasser avec zap_formats
+
+**zap_label()** :Supprime l'étiquette de variable, laissant les vecteurs non étiquetés tels quels. zap_labels() pour l'ensemble
+
+**zap_widths()** enlève l’attribut de la largeur des valeurs
 
 ---
 background-image: url(images/thatsall.gif)
@@ -616,6 +639,7 @@ background-image: url(images/thatsall.gif)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="macros.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
 "highlightLines": true,
