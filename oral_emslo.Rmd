@@ -19,6 +19,7 @@ class: right, bottom
 ###Emmanuel Carranza
 
 ---
+
 background-position: 300px 250px
 background-image: url("images/tidyverse_packages.png")
 background-size: 600px
@@ -41,12 +42,13 @@ background-size: 400px
 Format texte : .csv/cvs2, tsv, fwf, .txt, .log
 --
 
-###Haven:
-Format sas(sas7bcat), SPSS(.sav, .zsav, .por) Stata(.dta)
---
-
 ###Readxl: 
 Format excel (.xls, .xlsx)
+
+--
+
+###Haven:
+Format sas(sas7bcat), SPSS(.sav, .zsav, .por) Stata(.dta)
 
 --
 
@@ -201,9 +203,9 @@ background-size: 80px
 
 ##changer l'ordre des colonnes même avec col_select()
 ```{r}
-penguing <- read_csv("datasets/penguins_lter.csv",col_select = list( "Sex","Island","Species"))
+penguinss <- read_csv("datasets/penguins_lter.csv",col_select = list( "Sex","Island","Species"))
 
-head(penguing)
+head(penguinss)
 ```
 
 ---
