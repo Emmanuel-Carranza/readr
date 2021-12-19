@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>oral_emslo.knit</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/rladies-fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/rladies.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: center
+background-image: url("images/tidyverse-logo.png")
+background-size: 350px 
+
+class: right, bottom
+###Emmanuel Carranza
+
+---
+
+background-position: 550px 250px
+background-image: url("images/tidyverse_packages.png")
+background-size: 600px
+
+## Tidyverse
+.pull-left[
+
+```r
+library(tidyverse)
+```
+
+```
+## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+```
+
+```
+## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+## ✓ tibble  3.1.6     ✓ dplyr   1.0.7
+## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
+## ✓ readr   2.0.1     ✓ forcats 0.5.1
+```
+
+```
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+```
+
+```r
+library(readxl) 
+library(haven)
+```
+]
+
+---
+
+background-position: 800px 50px
+background-image: url("images/all_logo.png")
+background-size: 400px
+
+#Importation des données
+###Readr: 
+Format texte : .csv/cvs2, tsv, fwf, .txt, .log
+--
+
+###Readxl: 
+Format excel (.xls, .xlsx)
+
+--
+
+###Haven:
+Format sas(sas7bcat), SPSS(.sav, .zsav, .por) Stata(.dta)
+
+--
+
+En plus de lire et d'importer plusieurs type de fichiers localement, ces trois packages peuvent aussi lire des fichiers en ligne à partir d'un lien URL ansi que les fichiers compréssés.
+---
+
+background-image: url(images//readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+
+##Readr (under the hood)
+
+Lors de l'importation d'un fichier, trois choses distinctes se produisent :
+
+**Rectangular parsers**: un fichier texte est transposé sur une matrice rectangulaire de colonnes et de rangers.
+
+--
+
+**Column specification** : le type de chaque colonne (variable) est analysé en fonction des valeurs qui la composent.
+
+--
+
+**Vector parsers**: Assignation du type de classe des observations.
+
+![](images/under_the_hood.png)
+
+
+
+---
+background-image: url(images//readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+##Vector parsers (under the hood)
+
+**Atomic:** integer, double, logical et character. Les fonctions parse_logical, parse_integer, parse_double et parse_character sont considérées simples et rigides.
+
+--
+
+**Flexible numeric:** parse_number est flexible puisqu'il peut ignorer les préfixes ou suffixe comme % ou $ qui se retrouve dans la variable.
+
+--
+
+**Date/times**:comprend l'année, le mois, le jour, l'heure,les minutes et les secondes. La grande majorité du temps le format doit être spécifié("%m/%d/%y"). Il y a parse_datetime, parse_date et parse_time.
+
+--
+
+**Factor:** ce type de classe ne sera jamais assigné automatiquement. Il doit toujours être spécifié manuellement à fin d'être inclus ainsi que les différents niveaux qui limitent ses valeurs.
+
+--
+
+Important de comprendre que READR analyse seulement les 1000 premières ranger afin de déterminer la classe pour un rendement plus rapide.
+
+Et donc si le fichier est beaucoup plus gros et qu'on sait que les 1000 premières ne sont pas représentatives, il est primordial de demander à la fonction d'en prendre plus en compte (guess_max)
+
+---
+
+background-image: url(images/readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+##Rectangular parsers
+
+.pull-left[
+**read_delim()** observations délimitées par un symbole précis que tu specifie
+
+**read_csv()** observations délimitées par des ","
+            point décimal par des "."
+
+**read_csv2()** observations délimitées par des ;
+
+**read_tsv()** valeurs délimite par des tab
+
+**read_fwf()** observations délimitées par la taille en caractère que peut avoir les observations de la même variable
+
+**read_log()** pour les web log files
+]
+
+.pull-right[
+![](images/ex_data_cheat.png)
+]
+
+---
+background-image: url(images/readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+#read.csv vs read_csv
+
+Read.csv() est la fonction de base R qui permet de lire un fichier csv aussi mais sans Tidyverse.
+
+
+##Base R
+
+```r
+base_r_csv &lt;- read.csv("datasets/penguins_lter.csv")
+```
+
+## Readr
+
+```r
+readr_csv &lt;- read_csv("datasets/penguins_lter.csv",show_col_types = FALSE)
+```
+
+
+La différence est que read_csv accomplit la tâche environ 10 fois plus vite. C'est presque négligeable avec des petits fichiers, mais  très significatif lors d'importation de plus gros fichiers.
+
+---
+background-image: url(images/readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+#Web log file
+
+En informatique, un web log file est un fichier qui enregistre soit des événements qui se produisent dans un système d'exploitation ou d'autres exécutions de logiciels, soit des messages entre différents utilisateurs d'un logiciel de communication.
+
+
+![](images/Samp_ClientSideLogFile3.gif)
+
+---
+background-image: url(images/readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+##Argument important similaire (csv,csv2,tsv,delim)
+
+![](images/argument_mix.png)
+---
+background-image: url(images/readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+##Argument important similaire (csv,csv2,tsv,delim)
+
+**col_names** = True si le nom des colonnes est déja pris en compte dans la première ranger. Sinon on peut ajouter l'argument pour leur donner un nom.
+  
+**col_types** = Null vs modifier manuellement le type
+  
+**col_select** = Null vs sélection des colonnes à importer
+  
+**skip** = 0 est-ce qu’on skip certain ranger, cela inclut la première qui contient le nom des colonnes et donc si on skip celle-ci on doit les renommer après.
+  
+**locale** : utile pour utiliser un encodage universel de caractère (encoding = UTF-8)
+  
+**n_max** = Inf par défaut(combien de ligne est-ce qu’on importe)
+  
+**guess_max** : combien de ligne sont utilisé pour déterminer le type de classe des valeurs de la colonne
+
+---
+background-image: url(images/readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+##changer l'ordre des colonnes même avec col_select()
+
+```r
+penguinss &lt;- read_csv("datasets/penguins_lter.csv",col_select = list( "Sex","Island","Species"))
+```
+
+```
+## Rows: 344 Columns: 3
+```
+
+```
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (3): Species, Island, Sex
+```
+
+```
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+```r
+head(penguinss)
+```
+
+```
+## # A tibble: 6 × 3
+##   Sex    Island    Species                            
+##   &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;                              
+## 1 MALE   Torgersen Adelie Penguin (Pygoscelis adeliae)
+## 2 FEMALE Torgersen Adelie Penguin (Pygoscelis adeliae)
+## 3 FEMALE Torgersen Adelie Penguin (Pygoscelis adeliae)
+## 4 &lt;NA&gt;   Torgersen Adelie Penguin (Pygoscelis adeliae)
+## 5 FEMALE Torgersen Adelie Penguin (Pygoscelis adeliae)
+## 6 MALE   Torgersen Adelie Penguin (Pygoscelis adeliae)
+```
+
+---
+background-image: url(images/readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+#read_fwf
+.pull-left[
+Les fixed width files (.txt) sont un peu différent dans le sens que chaque valeur d'une colonne est située à la même place verticalement.
+
+
+L'attribut de ce type de fichier est qu'il n'y a pas de caractère utilisé pour délimiter les données ce qui rend son analyse plus rapide si le fichier est très gros. 
+
+Le fichier serait plus léger en terme de taille puisqu'il y a énormément de caractère qui ne s'y trouve pas.
+
+]
+.pull-right[
+![](images/fwf_ex.png)
+]
+
+---
+background-image: url(images//readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# FWF Example 1
+taille et nom des colonnes
+
+
+```r
+fwf_1 &lt;- read_fwf("datasets/penguins_fwf.txt",
+         fwf_widths(widths = c(9, 9, 4, 4, 3, 4, 6, 4),
+                    col_names = c("species",
+                                  "island", 
+                                  "bill_length_mm", 
+                                  "bill_depth_mm",
+                                  "flipper_length_mm", 
+                                  "body_mass_g",
+                                  "sex",
+                                  "year")))
+```
+
+```
+## Rows: 344 Columns: 8
+```
+
+```
+## ── Column specification ────────────────────────────────────────────────────────
+## 
+## chr (3): species, island, sex
+## dbl (5): bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g, year
+```
+
+```
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+---
+background-image: url(images//readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+#FWF Exemple 2
+Position de départ et de fin des colonnes ainsi que leur nom.
+                      
+
+```r
+fwf_2 &lt;- read_fwf("datasets/penguins_fwf.txt",
+         fwf_positions(start = c(1, 10, 19, 23, 27, 30, 34, 40),
+                       end = c(9, 18, 22, 26, 29, 33, 39, 43),
+                       col_names = c("species",
+                                     "island",
+                                     "bill_length_mm",
+                                     "bill_depth_mm",
+                                     "flipper_length_mm",
+                                     "body_mass_g",
+                                     "sex",
+                                     "year")))
+```
+
+```
+## Rows: 344 Columns: 8
+```
+
+```
+## ── Column specification ────────────────────────────────────────────────────────
+## 
+## chr (3): species, island, sex
+## dbl (5): bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g, year
+```
+
+```
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+---
+background-image: url(images//readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+# FWF Exemple 3
+Ici le nom des colonnes est spécifié sur la même ligne que leur taille.
+
+```r
+fwf_3&lt;- read_fwf("datasets/penguins_fwf.txt",
+               fwf_cols(species = c(1, 9),
+                        island = c(10, 18),
+                        bill_length_mm = c(19, 22),
+                        bill_depth_mm = c(23, 26),
+                        flipper_length_mm = c(27, 29),
+                        body_mass_g = c(30, 33),
+                        sex = c(34, 39),
+                        year = c(40, 43)))
+```
+
+```
+## Rows: 344 Columns: 8
+```
+
+```
+## ── Column specification ────────────────────────────────────────────────────────
+## 
+## chr (3): species, island, sex
+## dbl (5): bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g, year
+```
+
+```
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+---
+background-image: url(images//readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+#FWF Example 4 
+Presque la même chose, mais juste la taille.
+
+
+```r
+fwf_4 &lt;- read_fwf("datasets/penguins_fwf.txt", 
+                       fwf_cols(
+                         species = 9,
+                         island = 9,
+                         bill_length_mm = 4,
+                         bill_depth_mm = 4,
+                         flipper_length_mm = 3,
+                         body_mass_g = 4,
+                         sex = 6,
+                         year = 4))
+```
+
+```
+## Rows: 344 Columns: 8
+```
+
+```
+## ── Column specification ────────────────────────────────────────────────────────
+## 
+## chr (3): species, island, sex
+## dbl (5): bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g, year
+```
+
+```
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+
+
+---
+background-image: url(images//readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+#Modifier le type
+
+Dans le data set fwf_4 que je viens de créée, sexe est une variable character puisque juste constitue de lettres et year est considéré double. 
+
+
+```r
+spec(fwf_4)
+```
+
+```
+## cols(
+##   species = col_character(),
+##   island = col_character(),
+##   bill_length_mm = col_double(),
+##   bill_depth_mm = col_double(),
+##   flipper_length_mm = col_double(),
+##   body_mass_g = col_double(),
+##   sex = col_character(),
+##   year = col_double()
+## )
+```
+
+
+---
+background-image: url(images//readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+#Specifier le type de la colonne
+
+
+```r
+fwf_5 &lt;- read_fwf("datasets/penguins_fwf.txt", 
+                    fwf_cols(species = 9, 
+                            island = 9,
+                            bill_length_mm = 4,
+                            bill_depth_mm = 4,
+                            flipper_length_mm = 3,
+                            body_mass_g = 4,
+                            sex = 6,
+                            year = 4),
+                     col_types = cols(sex = col_factor(),
+                                      year = col_integer()))
+
+spec(fwf_5)
+```
+
+```
+## cols(
+##   species = col_character(),
+##   island = col_character(),
+##   bill_length_mm = col_double(),
+##   bill_depth_mm = col_double(),
+##   flipper_length_mm = col_double(),
+##   body_mass_g = col_double(),
+##   sex = col_factor(levels = NULL, ordered = FALSE, include_na = FALSE),
+##   year = col_integer()
+## )
+```
+
+---
+background-image: url(images//readr_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+#Type de classe
+
+Chaque classe correspond aussi à une abréviation qui peut être utilisé à la place du mot entier.
+
+![](images/classe_type.png)
+---
+background-image: url(images//readxl_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+#READXL
+
+readxl ne fait pas partie des package préloader avec tidyverse alors il faut bien s’assurer de :
+
+
+```r
+library(readxl)
+```
+
+il y a la fonction : read_excel, read_xlsx et read_xls
+
+La différence avec read_excel est que read_excel doit interpréter le format du fichier avec une autre fonction excel_format (qu’on ne voit pas).
+
+
+Alors si on connait déjà le format c’est préférable d’utiliser celle qui lui correspond.
+
+
+
+```r
+excel1 &lt;- read_xlsx("datasets/penguins.xlsx")
+
+head(excel1)
+```
+
+```
+## # A tibble: 6 × 17
+##   studyName `Sample Number` Species       Region Island  Stage   `Individual ID`
+##   &lt;chr&gt;     &lt;chr&gt;           &lt;chr&gt;         &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;          
+## 1 PAL0708   1               Adelie Pengu… Anvers Torger… Adult,… N1A1           
+## 2 PAL0708   2               Adelie Pengu… Anvers Torger… Adult,… N1A2           
+## 3 PAL0708   3               Adelie Pengu… Anvers Torger… Adult,… N2A1           
+## 4 PAL0708   4               Adelie Pengu… Anvers Torger… Adult,… N2A2           
+## 5 PAL0708   5               Adelie Pengu… Anvers Torger… Adult,… N3A1           
+## 6 PAL0708   6               Adelie Pengu… Anvers Torger… Adult,… N3A2           
+## # … with 10 more variables: Clutch Completion &lt;chr&gt;, Date Egg &lt;chr&gt;,
+## #   Culmen Length (mm) &lt;chr&gt;, Culmen Depth (mm) &lt;chr&gt;,
+## #   Flipper Length (mm) &lt;chr&gt;, Body Mass (g) &lt;chr&gt;, Sex &lt;chr&gt;,
+## #   Delta 15 N (o/oo) &lt;chr&gt;, Delta 13 C (o/oo) &lt;chr&gt;, Comments &lt;chr&gt;
+```
+
+
+---
+background-image: url(images//readxl_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+#Arguments readxl
+
+**path**	: où se trouve le fichier xls/xlsx 
+
+**sheet**	: soit le nom de la page ou son numéro.Par défaut, c’est juste la première.
+
+**range**	: positions des cellules comme  "B3:D87" où est placé l'information importante
+
+**col_names**	: = TRUE première ranger vont être les noms, 
+        FALSE = tu va devoir les nommer
+        
+**col_types**	: par défaut c’est NULL et readxl va interpréter le type lui-même.
+
+**na**	 : le caractère utiliser pour les donner manquantes sur excel par défaut est une case blanche. Si un autre symbole est utilisé c'est important de le mentionner.
+
+**skip**	 :combien de ranger on doit skipper pour analyser le fichier
+
+**n_max**	: combien de ranger il faudra importer. Ignorer si l'argument range() est utilisé
+
+**guess_max**	 :nombre maximum de ranger utilisé pour décider du type de classe des valeurs d'une colonne. Encore une fois il prend juste les 1000 premières.
+
+---
+background-image: url(images//readxl_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+#Column specification
+
+on peut aussi utiliser ces abréaviations à la place des mots entiers
+
+![](images/excel_type.png)
+
+---
+background-image: url(images//haven_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+#Haven
+
+Haven n'est pas activé avec Library(Tidyverse)
+
+On a pas de le choix de :
+
+
+```r
+library(haven)
+```
+
+
+**SAS** : read_sas() et read_xpt()
+
+**SPSS** :read_sav() et read_por()
+
+**Stata** : read_dta()
+
+---
+background-image: url(images//haven_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+##Labelled vectors
+
+SAS, SPSS, et Stata contienne un concept appeler “labelled vectors " C'est l'équivalent d’une description assigné a une ou plusieurs valeurs. C'est pour la compréhension de l'humain qui les données et non pour la machine.
+
+**labelled()**
+
+
+**print labelled()**
+
+##Tagged missing values
+Sas et stata comprennent les NA mais ils peuvent avoir plusieurs types de NA (avec différent niveau allant de A a Z)
+
+**tagged_na()** fournit un moyen pratique de représenter ces types de valeurs manquantes dans R.
+
+---
+background-image: url(images//haven_logo.png)
+background-position: 1050px 50px
+background-size: 80px
+
+##Remove attributes
+
+Il existe un certain nombre de fonctionnalités SPSS/SAS/Stata qui n'ont pas d'équivalent direct dans R.
+
+Haven les préserve afin que vous puissiez choisir ce que vous en faites.
+
+Pour les éliminer simplement, utilisez l'une des fonctions de zap.
+
+**zap_empty()** : Convertis les valeurs manquant en NA
+
+**zap_formats()** :Haven stocke les formats de variables dans un attribut: format.stata, format.spss ou format.sas. On peu s'en débarrasser avec zap_formats
+
+**zap_label()** :Supprime l'étiquette de variable, laissant les vecteurs non étiquetés tels quels. zap_labels() pour l'ensemble
+
+**zap_widths()** enlève l’attribut de la largeur des valeurs
+
+---
+background-image: url(images/thatsall.gif)
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
